@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mynote/views/login.dart';
 import 'package:mynote/views/register.dart';
+import 'package:mynote/views/verificaton_email_page.dart';
 import 'firebase_options.dart';
 import 'dart:developer' as devtools show log;
 
@@ -38,7 +39,7 @@ class MyHomePage extends StatelessWidget {
               if (user.emailVerified) {
                 return const NotePage();
               } else {
-                return const Register();
+                return const VerificationEmail();
               }
             } else {
               return const Login();
