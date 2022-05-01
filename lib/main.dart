@@ -1,11 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mynote/constants/route.dart';
 import 'package:mynote/views/login.dart';
 import 'package:mynote/views/register.dart';
 import 'package:mynote/views/verificaton_email_page.dart';
 import 'firebase_options.dart';
 import 'dart:developer' as devtools show log;
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,8 +18,9 @@ void main() {
     ),
     home: const MyHomePage(),
     routes: {
-      '/Login/': (context) => const Login(),
-      '/Register/': (context) => const Register(),
+      loginPage: (context) => const Login(),
+      registerPage: (context) => const Register(),
+      mainPage: ((context) => const NotePage()),
     },
   ));
 }
@@ -76,7 +79,7 @@ class _NotePageState extends State<NotePage> {
                 // devtools.log(dialog.toString());
                 if (dialog) {
                   Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/Login/', (route) => false);
+                      .pushNamedAndRemoveUntil(loginPage, (route) => false);
                 } else {
                   return;
                 }
