@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mynote/constants/route.dart';
-import 'dart:developer' as devtools show log;
+
+import '../utilities/show_errorDialog.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -57,20 +58,39 @@ class _LoginState extends State<Login> {
                 final email = _email.text;
                 final password = _password.text;
                 try {
-                  final userCredential = await FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                          email: email, password: password);
-                  devtools.log(userCredential.toString());
-                  Navigator.of(context)
-                    .pushNamedAndRemoveUntil(mainPage, (route) => false);
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                      email: email, password: password);
+                  final user = FirebaseAuth.instance.currentUser;
+                  if (user?.emailVerified ?? false) {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil(mainPage, (route) => false);
+                  } else {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil(verifidPage, (route) => false);
+                  }
                 } on FirebaseAuthException catch (e) {
                   if (e.code == "user-not-found") {
-                    devtools.log("user not found");
+                    await showErrorDialg(
+                      context,
+                      "user not found",
+                    );
                   } else if (e.code == "wrong-password") {
-                    devtools.log("wrong password");
+                    await showErrorDialg(
+                      context,
+                      "wrong password",
+                    );
+                  } else {
+                    await showErrorDialg(
+                      context,
+                      "Error: ${e.code}",
+                    );
                   }
+                } catch (e) {
+                  await showErrorDialg(
+                    context,
+                    e.toString(),
+                  );
                 }
-                
               },
               child: const Text("Login")),
           TextButton(

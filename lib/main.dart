@@ -6,7 +6,6 @@ import 'package:mynote/views/login.dart';
 import 'package:mynote/views/register.dart';
 import 'package:mynote/views/verificaton_email_page.dart';
 import 'firebase_options.dart';
-import 'dart:developer' as devtools show log;
 
 
 void main() {
@@ -20,7 +19,8 @@ void main() {
     routes: {
       loginPage: (context) => const Login(),
       registerPage: (context) => const Register(),
-      mainPage: ((context) => const NotePage()),
+      mainPage: (context) => const NotePage(),
+      verifidPage:(context) => const VerificationEmail(),
     },
   ));
 }
