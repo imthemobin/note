@@ -59,7 +59,7 @@ class _LoginState extends State<Login> {
                 final password = _password.text;
                 try {
                   await FirebaseAuth.instance.signInWithEmailAndPassword(
-                      email: email, password: password);
+                      email: email, password: password,);
                   final user = FirebaseAuth.instance.currentUser;
                   if (user?.emailVerified ?? false) {
                     Navigator.of(context)
