@@ -1,10 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mynote/constants/route.dart';
+import 'package:mynote/services/auth/auth_exceptions.dart';
+import 'package:mynote/services/auth/auth_services.dart';
 import 'package:mynote/utilities/show_errorDialog.dart';
-import 'dart:developer' as devtools show log;
-import '../firebase_options.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -37,14 +35,7 @@ class _RegisterState extends State<Register> {
       appBar: AppBar(
         title: const Text("Register Page"),
       ),
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              return Column(
+      body: Column(
                 children: [
                   TextField(
                     controller: _email,
@@ -67,38 +58,30 @@ class _RegisterState extends State<Register> {
                         final email = _email.text;
                         final password = _password.text;
                         try {
-                          await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                                  email: email, password: password);
-                          final user = FirebaseAuth.instance.currentUser;
-                          await user?.sendEmailVerification();
+                          await AuthServices.firebase()
+                              .createUser(email: email, password: password);
+                          AuthServices.firebase().sendEmailVerification();
                           Navigator.of(context).pushNamed(verifidPage);
-                        } on FirebaseAuthException catch (e) {
-                          if (e.code == "weak-password") {
-                            await showErrorDialg(
-                              context,
-                              "weak password",
-                            );
-                          } else if (e.code == "email-already-in-use") {
-                            await showErrorDialg(
-                              context,
-                              "email alread in use",
-                            );
-                          } else if (e.code == "invalid-email") {
-                            await showErrorDialg(
-                              context,
-                              "invalid email",
-                            );
-                          } else {
-                            await showErrorDialg(
-                              context,
-                              "Erroe: ${e.code}",
-                            );
-                          }
-                        } catch (e) {
+                        } on WeakPasswordAuthException {
                           await showErrorDialg(
                             context,
-                            e.toString(),
+                            "weak password",
+                          );
+                        } on InvaildEmailAuthException {
+                          await showErrorDialg(
+                            context,
+                            "invalid email",
+                          );
+                        } on EmailAlreadyInUseAuthException{
+                          await showErrorDialg(
+                            context,
+                            "Email Already In Use",
+                          );
+                        }
+                         on GenericAuthException {
+                          await showErrorDialg(
+                            context,
+                            'Feaild register',
                           );
                         }
                       },
@@ -106,16 +89,11 @@ class _RegisterState extends State<Register> {
                   TextButton(
                       onPressed: () {
                         Navigator.of(context).pushNamedAndRemoveUntil(
-                            '/Login/', (route) => false);
+                            loginPage, (route) => false);
                       },
                       child: const Text("Login your account"))
                 ],
-              );
-            default:
-              return const Text("Loading...");
-          }
-        },
-      ),
+              ),
     );
   }
 }
