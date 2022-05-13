@@ -71,6 +71,7 @@ class NotesService {
     // make sure owner exsist in database in current user
     final dbUser = await getUser(email: owner.email);
     if (dbUser != owner) {
+      
       throw CouldNotFoundUser();
     }
 
