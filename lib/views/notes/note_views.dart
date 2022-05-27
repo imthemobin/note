@@ -72,6 +72,7 @@ class _NotePageState extends State<NotePage> {
                   builder: ((context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
+                      case ConnectionState.active:
                         return const Text("waiting all notes...");
                       default:
                         return const CircularProgressIndicator();
