@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mynote/constants/enums.dart';
 import 'package:mynote/constants/route.dart';
 import 'package:mynote/services/auth/auth_services.dart';
-import 'package:mynote/services/auth/auth_user.dart';
 import 'package:mynote/services/crud/notes_service.dart';
 
 class NotePage extends StatefulWidget {
@@ -32,8 +31,14 @@ class _NotePageState extends State<NotePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Main UI"),
+        title: const Text("Your Notes"),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(newNotes);
+            },
+            icon: const Icon(Icons.add),
+          ),
           PopupMenuButton<MenuAction>(onSelected: (value) async {
             switch (value) {
               case MenuAction.logout:
