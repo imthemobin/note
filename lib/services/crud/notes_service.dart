@@ -11,11 +11,16 @@ class NotesService {
   List<DatabaseNote> _notes = [];
 
   static final NotesService _share = NotesService._shareInstance();
-  NotesService._shareInstance();
+  NotesService._shareInstance() {
+    _noteStreamController = StreamController<List<DatabaseNote>>.broadcast(
+      onListen: () {
+        _noteStreamController.sink.add(_notes);
+      },
+    );
+  }
   factory NotesService() => _share;
 
-  final _noteStreamController =
-      StreamController<List<DatabaseNote>>.broadcast();
+  late final StreamController<List<DatabaseNote>> _noteStreamController;
 
   Stream<List<DatabaseNote>> get allNotes => _noteStreamController.stream;
 
@@ -283,9 +288,9 @@ class DatabaseNote {
 
   DatabaseNote.fromRow(Map<String, Object?> map)
       : id = map[idColumn] as int,
-        userId = map[emailColumn] as int,
+        userId = map[userIdColumn] as int,
         text = map[textColumn] as String,
-        isSynciedWithClould = map[isSynciedWithCloudColumn] as bool;
+        isSynciedWithClould = (map[isSynciedWithCloudColumn] as int)==1 ? true : false;
 
   @override
   String toString() =>
@@ -306,10 +311,10 @@ const emailColumn = 'email';
 const userIdColumn = 'user_id';
 const textColumn = 'text';
 const isSynciedWithCloudColumn = 'is_syncied_with_clould';
-const createNoteTable = '''CREATE TABLE IF NOT EXISTS "note" (
+const createNoteTable = '''CREATE TABLE "note" (
 	"id"	INTEGER NOT NULL,
 	"user_id"	INTEGER NOT NULL,
-	"text"	TEXT,
+	"text"	TEXT NOT NULL,
 	"is_syncied_with_clould"	INTEGER NOT NULL DEFAULT 0,
 	PRIMARY KEY("id" AUTOINCREMENT),
 	FOREIGN KEY("user_id") REFERENCES "user"("id")

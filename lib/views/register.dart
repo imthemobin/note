@@ -51,7 +51,7 @@ class _RegisterState extends State<Register> {
                     autocorrect: false,
                     controller: _password,
                     decoration: const InputDecoration(
-                        hintText: "Enter your email here"),
+                        hintText: "Enter your password here"),
                   ),
                   TextButton(
                       onPressed: () async {

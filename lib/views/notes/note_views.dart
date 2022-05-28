@@ -22,12 +22,6 @@ class _NotePageState extends State<NotePage> {
   }
 
   @override
-  void dispose() {
-    _noteService.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -73,7 +67,25 @@ class _NotePageState extends State<NotePage> {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
                       case ConnectionState.active:
-                        return const Text("waiting all notes...");
+                        if (snapshot.hasData) {
+                          final allNotes = snapshot.data as List<DatabaseNote>;
+                          return ListView.builder(
+                              itemCount: allNotes.length,
+                              itemBuilder: (context, index) {
+                                final note = allNotes[index];
+                                print(allNotes[index]);
+                                return ListTile(
+                                  title: Text(
+                                    note.text,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: true,
+                                    maxLines: 1,
+                                  ),
+                                );
+                              });
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
                       default:
                         return const CircularProgressIndicator();
                     }
