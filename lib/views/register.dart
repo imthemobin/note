@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mynote/constants/route.dart';
 import 'package:mynote/services/auth/auth_exceptions.dart';
 import 'package:mynote/services/auth/auth_services.dart';
-import 'package:mynote/utilities/show_errorDialog.dart';
+import 'package:mynote/utilities/dialogs/error_dialog.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);

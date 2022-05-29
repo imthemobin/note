@@ -3,6 +3,8 @@ import 'package:mynote/constants/enums.dart';
 import 'package:mynote/constants/route.dart';
 import 'package:mynote/services/auth/auth_services.dart';
 import 'package:mynote/services/crud/notes_service.dart';
+import 'package:mynote/utilities/dialogs/logout_dialogs.dart';
+import 'package:mynote/views/notes/note_list_view.dart';
 
 class NotePage extends StatefulWidget {
   const NotePage({Key? key}) : super(key: key);
@@ -36,7 +38,7 @@ class _NotePageState extends State<NotePage> {
           PopupMenuButton<MenuAction>(onSelected: (value) async {
             switch (value) {
               case MenuAction.logout:
-                final dialog = await showDialogs(context);
+                final dialog = await showLogoutDialogs(context);
                 // devtools.log(dialog.toString());
                 if (dialog) {
                   Navigator.of(context)
@@ -69,20 +71,12 @@ class _NotePageState extends State<NotePage> {
                       case ConnectionState.active:
                         if (snapshot.hasData) {
                           final allNotes = snapshot.data as List<DatabaseNote>;
-                          return ListView.builder(
-                              itemCount: allNotes.length,
-                              itemBuilder: (context, index) {
-                                final note = allNotes[index];
-                                print(allNotes[index]);
-                                return ListTile(
-                                  title: Text(
-                                    note.text,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: true,
-                                    maxLines: 1,
-                                  ),
-                                );
-                              });
+                          return NoteListView(
+                            notes: allNotes,
+                            onDeleteNote: (note) async {
+                              await _noteService.deleteNote(id: note.id);
+                            },
+                          );
                         } else {
                           return const CircularProgressIndicator();
                         }
@@ -97,27 +91,4 @@ class _NotePageState extends State<NotePage> {
       ),
     );
   }
-}
-
-Future<bool> showDialogs(BuildContext context) {
-  return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("LOGOUT"),
-          content: const Text("Are you sure to log out?"),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: const Text("Cancel")),
-            TextButton(
-                onPressed: () async {
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text("Logout")),
-          ],
-        );
-      }).then((value) => value ?? false);
 }
