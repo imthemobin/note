@@ -6,7 +6,6 @@ import 'package:mynote/services/crud/notes_service.dart';
 import 'package:mynote/utilities/dialogs/logout_dialog.dart';
 import 'package:mynote/views/notes/notes_list_view.dart';
 
-
 class NotesView extends StatefulWidget {
   const NotesView({Key? key}) : super(key: key);
 

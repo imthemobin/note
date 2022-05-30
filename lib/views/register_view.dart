@@ -4,7 +4,6 @@ import 'package:mynote/services/auth/auth_exceptions.dart';
 import 'package:mynote/services/auth/auth_service.dart';
 import 'package:mynote/utilities/dialogs/error_dialog.dart';
 
-
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
 
@@ -68,22 +67,22 @@ class _RegisterViewState extends State<RegisterView> {
                 AuthService.firebase().sendEmailVerification();
                 Navigator.of(context).pushNamed(verifyEmailRoute);
               } on WeakPasswordAuthException {
-                await showErrorDialg(
+                await showErrorDialog(
                   context,
                   'Weak password',
                 );
               } on EmailAlreadyInUseAuthException {
-                await showErrorDialg(
+                await showErrorDialog(
                   context,
                   'Email is already in use',
                 );
-              } on InvaildEmailAuthException {
-                await showErrorDialg(
+              } on InvalidEmailAuthException {
+                await showErrorDialog(
                   context,
                   'This is an invalid email address',
                 );
               } on GenericAuthException {
-                await showErrorDialg(
+                await showErrorDialog(
                   context,
                   'Failed to register',
                 );

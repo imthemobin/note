@@ -4,7 +4,6 @@ import 'package:mynote/services/auth/auth_exceptions.dart';
 import 'package:mynote/services/auth/auth_service.dart';
 import 'package:mynote/utilities/dialogs/error_dialog.dart';
 
-
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
 
@@ -80,17 +79,17 @@ class _LoginViewState extends State<LoginView> {
                   );
                 }
               } on UserNotFoundAuthException {
-                await showErrorDialg(
+                await showErrorDialog(
                   context,
                   'User not found',
                 );
               } on WrongPasswordAuthException {
-                await showErrorDialg(
+                await showErrorDialog(
                   context,
                   'Wrong credentials',
                 );
               } on GenericAuthException {
-                await showErrorDialg(
+                await showErrorDialog(
                   context,
                   'Authentication error',
                 );

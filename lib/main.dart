@@ -1,52 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:mynote/constants/route.dart';
-import 'package:mynote/services/auth/auth_services.dart';
-import 'package:mynote/views/login.dart';
-import 'package:mynote/views/notes/new_note.dart';
-import 'package:mynote/views/notes/note_views.dart';
-import 'package:mynote/views/register.dart';
-import 'package:mynote/views/verificaton_email_page.dart';
-
+import 'package:mynote/constants/routes.dart';
+import 'package:mynote/services/auth/auth_service.dart';
+import 'package:mynote/views/login_view.dart';
+import 'package:mynote/views/notes/create_update_note_view.dart';
+import 'package:mynote/views/notes/notes_view.dart';
+import 'package:mynote/views/register_view.dart';
+import 'package:mynote/views/verify_email_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(
-    title: 'Flutter Demo',
-    theme: ThemeData(
-      primarySwatch: Colors.blue,
+  runApp(
+    MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const HomePage(),
+      routes: {
+        loginRoute: (context) => const LoginView(),
+        registerRoute: (context) => const RegisterView(),
+        notesRoute: (context) => const NotesView(),
+        verifyEmailRoute: (context) => const VerifyEmailView(),
+        createOrUpdateNoteRoute: (context) => const CreateUpdateNoteView(),
+      },
     ),
-    home: const MyHomePage(),
-    routes: {
-      loginPage: (context) => const Login(),
-      registerPage: (context) => const Register(),
-      mainPage: (context) => const NotePage(),
-      verifidPage:(context) => const VerificationEmail(),
-      newNotes: ((context) => const NewNoteView())
-    },
-  ));
+  );
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: AuthServices.firebase().initializ(),
+      future: AuthService.firebase().initialize(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
-            final user = AuthServices.firebase().currentUser;
+            final user = AuthService.firebase().currentUser;
             if (user != null) {
               if (user.isEmailVerified) {
-                return const NotePage();
+                return const NotesView();
               } else {
-                return const VerificationEmail();
+                return const VerifyEmailView();
               }
             } else {
-              return const Login();
+              return const LoginView();
             }
-
           default:
             return const CircularProgressIndicator();
         }
@@ -54,7 +54,3 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
-
-
-
-

@@ -3,7 +3,6 @@ import 'package:mynote/services/auth/auth_service.dart';
 import 'package:mynote/services/crud/notes_service.dart';
 import 'package:mynote/utilities/generics/get_arguments.dart';
 
-
 class CreateUpdateNoteView extends StatefulWidget {
   const CreateUpdateNoteView({Key? key}) : super(key: key);
 
